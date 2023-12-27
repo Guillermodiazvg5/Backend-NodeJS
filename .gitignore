@@ -1,0 +1,9 @@
+# modulos de NodeJs
+
+node_modules
+
+
+
+# variables de entorno para las credenciales de la  base de datos 
+
+.env

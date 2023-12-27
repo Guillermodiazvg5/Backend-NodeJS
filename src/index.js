@@ -7,7 +7,7 @@ const productsRoutes = require('./routes/products.routes');
 
 const app = express();
 
-app.use(cors());                         // permite comunicar el servidor del back y el front
+app.use(cors());                         // permite comunicar el servidor del back y el del front
 
 app.use(morgan('dev'));
 
@@ -15,7 +15,7 @@ app.use(express.json());                // permite recibir objetos Json
 
 
 
-// app.use(productsRoutes)
+ app.use(productsRoutes)
 
 
 app.use ((err, req, res, next) => {        // manejador de errores comun para todas las funciones 
