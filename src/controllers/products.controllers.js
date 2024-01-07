@@ -1,142 +1,125 @@
-const pool = require ("../database")
+const pool = require("../database");
 
-const mercadopago = require("mercadopago")
+const mercadopago = require("mercadopago");
 
-const {allProducts} = require('../routes/products.routes.js')
-
-
+const dotenv = require("dotenv");
+dotenv.config();
 
 const getAllProducts = async (req, res, next) => {
+  try {
+    // res.send("Leyendo productos y datos");
 
-    try{
+    const allProductsNuts = await pool.query("select * from nuts");
 
-          // res.send("Leyendo productos y datos");
-  
-          const allProductsNuts =  await pool.query('select * from nuts')
+    console.log(allProductsNuts);
 
-          console.log(allProductsNuts)
+    res.json(allProductsNuts.rows);
+  } catch (error) {
+    next(error);
+  }
+};
 
-          res.json(allProductsNuts.rows)
+const getProducts = async (req, res, next) => {
+  try {
+    //  throw new Error('Ocurrio un error fue mal ')
 
+    const { id } = req.params;
 
-    }catch(error){
+    const productsUnit = await pool.query("select * from nuts where id = $1 ", [
+      id,
+    ]);
 
-        next(error)
+    if (productsUnit.rows.length === 0)
+      res.status(404).json({
+        message: " Producto no econtrado ",
+      });
 
+    res.json(productsUnit.rows[0]);
+  } catch (error) {
+    next(error);
+  }
+};
 
-    }
+const postProducts = async (req, res, next) => {
+  const product = req.body;
 
-  
+  console.log("f1");
 
-}
+  console.log(product);
+  res.send("Creando productos S");
+};
 
-const getProducts = async(req,res,next) => {
+const deleteProducts = async (req, res, next) => {
+  res.send("Eliminando productos");
+};
 
-    try{
-
-      //  throw new Error('Ocurrio un error fue mal ')
-
-    const {id} = req.params 
-
-   const productsUnit = await pool.query('select * from nuts where id = $1 ' , [id])
-
-   if(productsUnit.rows.length === 0)
-       res.status(404).json({
-      message: " Producto no econtrado ",
-    
-    })
-
-
-      res.json(productsUnit.rows[0]);
-
-    }catch(error){
-        
-        next(error);
-
-
-
-    }
-
-    
-
-     
+const putProducts = async (req, res, next) => {
+  res.send("Actualizando productos");
 };
 
 
-const postProducts = async (req, res, next) => {
-    const product = req.body
+let allShoppingCart = [];
 
-    console.log('f1')
+const getFrontend = async (req, res) => {
+  allShoppingCart = await req.body.allProducts;
+  console.log(allShoppingCart);
+  // Do something with allProducts
 
+  //module.exports.allProducts = allProducts ;
+  res.send("Received allProducts1");
+};
 
-    console.log(product)
-    res.send("Creando productos S");
+const CreateOrder = async (req, res) => {
+  const result = mercadopago.configure({
+    access_token:
+      "TEST-8843625446242108-010322-cea5e3ffa5d7b3c0b8b5b5ce48a2375b-386315372",
+    // access_token: process.env.ACCESS_TOKEN ,
+  });
+
+  //allProducts = req.body;
+
+  const NuevoArray = allShoppingCart.map((e) => {
+    return {
+      title: e.producto,
+      quantity: e.cantidad_carrito,
+      currency_id: "COP",
+      unit_price: e.precio_pesos,
+      description: e.descripcion,
+    };
+  });
+
+  try {
+    const preference = {
+      items: NuevoArray,
+
+      back_urls: {
+        success: "http://localhost:3000/",
+        failure: "http://localhost:3000/failure",
+      },
+
+      auto_return: "approved",
+    };
+
+    const respuesta = await mercadopago.preferences.create(preference);
+    console.log(respuesta);
+    res.status(200).json(respuesta.response.init_point);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json(error.message);
   }
 
+  //res.send("creando orden ");
+  console.log(result);
+};
 
+module.exports = {
+  getAllProducts,
+  getProducts,
+  postProducts,
+  deleteProducts,
+  putProducts,
 
+  getFrontend,
 
-  const deleteProducts = async (req, res, next) => {
-    res.send("Eliminando productos");
-  }
-
-
-
-  const putProducts = async (req, res, next) => {
-    res.send("Actualizando productos");
-  }
-
-
-
-
-
-
-
-
-
-
-
- const CreateOrder = async (req,res) => {
-    const result = await  mercadopago.configure({
-
-       access_token: "TEST-5774235803669517-010610-3ff3a01b35a6d1ac23788f96b134270e-1622920706",
-    });
-
-    mercadopago.preferences.create({
-      items:[
-         {
-              title:'portatil',
-              quantity: 1,
-              currency_id: 'COP',
-              unit_price: 500000,
-              description:"Una computadora"
-             }          
-      ]
-    });
-
-
-
-   
-
-    res.send("creando orden ");
-    console.log(result)
-
- };
-
-
-
-
-
-
-  module.exports = {
-
-    getAllProducts,
-    getProducts,
-    postProducts,
-    deleteProducts,
-    putProducts,
-
-    CreateOrder
-
-
-  }
+  CreateOrder,
+};
