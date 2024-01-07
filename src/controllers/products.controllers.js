@@ -1,5 +1,10 @@
 const pool = require ("../database")
 
+const mercadopago = require("mercadopago")
+
+const {allProducts} = require('../routes/products.routes.js')
+
+
 
 const getAllProducts = async (req, res, next) => {
 
@@ -81,13 +86,57 @@ const postProducts = async (req, res, next) => {
     res.send("Actualizando productos");
   }
 
+
+
+
+
+
+
+
+
+
+
+ const CreateOrder = async (req,res) => {
+    const result = await  mercadopago.configure({
+
+       access_token: "TEST-5774235803669517-010610-3ff3a01b35a6d1ac23788f96b134270e-1622920706",
+    });
+
+    mercadopago.preferences.create({
+      items:[
+         {
+              title:'portatil',
+              quantity: 1,
+              currency_id: 'COP',
+              unit_price: 500000,
+              description:"Una computadora"
+             }          
+      ]
+    });
+
+
+
+   
+
+    res.send("creando orden ");
+    console.log(result)
+
+ };
+
+
+
+
+
+
   module.exports = {
 
     getAllProducts,
     getProducts,
     postProducts,
     deleteProducts,
-    putProducts
+    putProducts,
+
+    CreateOrder
 
 
   }
