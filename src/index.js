@@ -5,7 +5,7 @@ const productsRoutes = require("./routes/products.routes");
 
 const app = express();
 
-app.use(cors()); // permite comunicar el servidor del back y el del front
+app.use(cors({origin: 'https://render-frontend-react-healthfoods.onrender.com' || 'http://localhost:3000'})); // permite comunicar el servidor del back y el del front
 
 app.use(morgan("dev"));
 
