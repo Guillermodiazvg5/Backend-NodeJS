@@ -43,7 +43,7 @@ router.put("/products", putProducts);
 
 
 
-// OPTENIEDO DATOS DEL FRONTEND
+// OPTENIENDO DATOS DEL FRONTEND
 
 
 router.post('/my-endpoint', getFrontend); 
