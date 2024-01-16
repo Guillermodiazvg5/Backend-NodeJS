@@ -97,7 +97,7 @@ const CreateOrder = async (req, res) => {
 
         
 
-        failure: "https://render-frontend-react-healthfoods.onrender.com/failure",
+        failure: "https://render-frontend-react-healthfoods.onrender.com/",
 
       },
 
