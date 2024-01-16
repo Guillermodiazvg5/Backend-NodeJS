@@ -9,7 +9,7 @@ const getAllProducts = async (req, res, next) => {
   try {
     // res.send("Leyendo productos y datos");
 
-    const allProductsNuts = await pool.query("select * from nuts");
+    const allProductsNuts = await pool.query("select * from nuts2");
 
     console.log(allProductsNuts);
 
@@ -26,7 +26,7 @@ const getProducts = async (req, res, next) => {
 
     const { id } = req.params;
 
-    const productsUnit = await pool.query("select * from nuts where id = $1 ", [
+    const productsUnit = await pool.query("select * from nuts2 where id = $1 ", [
       id,
     ]);
 
