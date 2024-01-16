@@ -17,6 +17,7 @@ const getAllProducts = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+  
 };
 
 const getProducts = async (req, res, next) => {
