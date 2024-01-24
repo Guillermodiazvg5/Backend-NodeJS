@@ -25,9 +25,10 @@ const getProducts = async (req, res, next) => {
 
     const { id } = req.params;
 
-    const productsUnit = await pool.query("select * from nuts2 where id = $1 ", [
-      id,
-    ]);
+    const productsUnit = await pool.query(
+      "select * from nuts2 where id = $1 ",
+      [id]
+    );
 
     if (productsUnit.rows.length === 0)
       res.status(404).json({
@@ -56,7 +57,6 @@ const deleteProducts = async (req, res, next) => {
 const putProducts = async (req, res, next) => {
   res.send("Actualizando productos");
 };
-
 
 let allShoppingCart = [];
 
@@ -95,10 +95,7 @@ const CreateOrder = async (req, res) => {
       back_urls: {
         success: "https://render-frontend-react-healthfoods.onrender.com/",
 
-        
-
         failure: "https://render-frontend-react-healthfoods.onrender.com/",
-
       },
 
       auto_return: "approved",
