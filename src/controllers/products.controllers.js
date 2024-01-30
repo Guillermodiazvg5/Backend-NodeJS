@@ -5,6 +5,7 @@ const mercadopago = require("mercadopago");
 const dotenv = require("dotenv");
 dotenv.config();
 
+
 const getAllProducts = async (req, res, next) => {
   try {
     // res.send("Leyendo productos y datos");
