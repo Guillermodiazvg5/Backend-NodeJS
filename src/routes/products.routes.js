@@ -1,15 +1,22 @@
-const express = require('express');
+const express = require("express");
 
 const { Router } = require("express");
-const pool = require('../database')
+const pool = require("../database");
 
-const axios = require('axios')
+const axios = require("axios");
 
-
-
-const {getAllProducts , getProducts , postProducts , deleteProducts , putProducts,getFrontend,CreateOrder} = require('../controllers/products.controllers')
+const {
+  getAllProducts,
+  getProducts,
+  postProducts,
+  deleteProducts,
+  putProducts,
+  getFrontend,
+  CreateOrder,
+} = require("../controllers/products.controllers");
 
 const router = Router();
+
 
 /*
 router.get("/now", async (req, res) => {
@@ -21,46 +28,24 @@ router.get("/now", async (req, res) => {
 
   */
 
+router.get("/products", getAllProducts);
 
-router.get("/products", getAllProducts );
+router.get("/products/:id", getProducts);
 
+router.post("/products", postProducts);
 
-router.get('/products/:id', getProducts)
-
-
-
-
-
-router.post("/products", postProducts );
-
-
-router.delete("/products", deleteProducts );
-
+router.delete("/products", deleteProducts);
 
 router.put("/products", putProducts);
 
-
-
-
-
 // OPTENIENDO DATOS DEL FRONTEND
 
+router.post("/my-endpoint", getFrontend);
 
-router.post('/my-endpoint', getFrontend); 
+router.post("/create-order", CreateOrder);
 
+router.get("/success", (req, res) => res.send("orden creada"));
 
+router.get("/webhook", (req, res) => res.send("webhook "));
 
-
-
-
-router.post('/create-order' ,  CreateOrder)
-
-router.get('/success' , (req,res) => res.send('orden creada'))
-
-router.get('/webhook' , (req,res) => res.send('webhook '))
-
-
-
-
-
-module.exports = router  ;
+module.exports = router;
